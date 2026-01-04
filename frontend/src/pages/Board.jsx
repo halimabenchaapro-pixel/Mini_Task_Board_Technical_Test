@@ -7,6 +7,7 @@ import TaskForm from '../components/TaskForm';
 import DeleteConfirmation from '../components/DeleteConfirmation';
 import Modal from '../components/Modal';
 import Button from '../components/Button';
+import ThemeToggle from '../components/ThemeToggle';
 
 const Board = () => {
   const [tasks, setTasks] = useState([]);
@@ -21,9 +22,9 @@ const Board = () => {
   const { logout } = useAuth();
 
   const columns = {
-    BACKLOG: { title: 'Backlog', color: 'bg-gray-100' },
-    IN_PROGRESS: { title: 'In Progress', color: 'bg-blue-100' },
-    DONE: { title: 'Done', color: 'bg-green-100' },
+    BACKLOG: { title: 'Backlog', color: 'bg-gray-100 dark:bg-gray-700' },
+    IN_PROGRESS: { title: 'In Progress', color: 'bg-blue-100 dark:bg-blue-900' },
+    DONE: { title: 'Done', color: 'bg-green-100 dark:bg-green-900' },
   };
 
   useEffect(() => {
@@ -161,13 +162,14 @@ const Board = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
       {/* Header */}
-      <header className="bg-white shadow-sm">
+      <header className="bg-white dark:bg-gray-800 shadow-sm transition-colors duration-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <h1 className="text-2xl font-bold text-gray-900">Task Board</h1>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Task Board</h1>
             <div className="flex gap-2">
+              <ThemeToggle />
               <Button onClick={openCreateModal} variant="primary">
                 + New Task
               </Button>
@@ -184,12 +186,12 @@ const Board = () => {
               placeholder="Search tasks..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+              className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-colors duration-200"
             />
             <select
               value={priorityFilter}
               onChange={(e) => setPriorityFilter(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+              className="px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-colors duration-200"
             >
               <option value="ALL">All Priorities</option>
               <option value="LOW">Low</option>
@@ -215,10 +217,10 @@ const Board = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {Object.entries(columns).map(([status, { title, color }]) => (
               <div key={status} className="flex flex-col">
-                <div className={`${color} rounded-t-lg px-4 py-3`}>
-                  <h2 className="font-semibold text-gray-800">
+                <div className={`${color} rounded-t-lg px-4 py-3 transition-colors duration-200`}>
+                  <h2 className="font-semibold text-gray-800 dark:text-gray-200">
                     {title}{' '}
-                    <span className="text-sm font-normal text-gray-600">
+                    <span className="text-sm font-normal text-gray-600 dark:text-gray-400">
                       ({getTasksByStatus(status).length})
                     </span>
                   </h2>
@@ -229,12 +231,12 @@ const Board = () => {
                     <div
                       ref={provided.innerRef}
                       {...provided.droppableProps}
-                      className={`flex-1 bg-gray-100 rounded-b-lg p-4 min-h-[400px] ${
-                        snapshot.isDraggingOver ? 'bg-blue-50' : ''
+                      className={`flex-1 bg-gray-100 dark:bg-gray-800 rounded-b-lg p-4 min-h-[400px] transition-all duration-200 ${
+                        snapshot.isDraggingOver ? 'bg-blue-50 dark:bg-blue-900' : ''
                       }`}
                     >
                       {getTasksByStatus(status).length === 0 ? (
-                        <div className="text-center py-8 text-gray-500">
+                        <div className="text-center py-8 text-gray-500 dark:text-gray-400">
                           <svg
                             className="mx-auto h-12 w-12 text-gray-400"
                             fill="none"

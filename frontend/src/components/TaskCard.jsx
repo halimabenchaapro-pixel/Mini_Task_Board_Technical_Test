@@ -18,7 +18,7 @@ const TaskCard = ({ task, onEdit, onDelete, provided, snapshot }) => {
       ref={provided?.innerRef}
       {...provided?.draggableProps}
       {...provided?.dragHandleProps}
-      className={`bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-3 hover:shadow-md transition-shadow ${
+      className={`bg-white dark:bg-gray-700 rounded-lg shadow-sm border border-gray-200 dark:border-gray-600 p-4 mb-3 hover:shadow-md transition-all duration-200 ${
         snapshot?.isDragging ? 'shadow-lg rotate-2' : ''
       }`}
     >
@@ -32,16 +32,16 @@ const TaskCard = ({ task, onEdit, onDelete, provided, snapshot }) => {
       </div>
 
       {/* Title */}
-      <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2">{task.title}</h3>
+      <h3 className="font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">{task.title}</h3>
 
       {/* Description */}
       {task.description && (
-        <p className="text-sm text-gray-600 mb-3 line-clamp-2">{task.description}</p>
+        <p className="text-sm text-gray-600 dark:text-gray-300 mb-3 line-clamp-2">{task.description}</p>
       )}
 
       {/* Due Date */}
       {task.due_date && (
-        <div className="flex items-center text-xs text-gray-500 mb-3">
+        <div className="flex items-center text-xs text-gray-500 dark:text-gray-400 mb-3">
           <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               strokeLinecap="round"
@@ -55,16 +55,16 @@ const TaskCard = ({ task, onEdit, onDelete, provided, snapshot }) => {
       )}
 
       {/* Actions */}
-      <div className="flex gap-2 pt-2 border-t border-gray-100">
+      <div className="flex gap-2 pt-2 border-t border-gray-100 dark:border-gray-600">
         <button
           onClick={() => onEdit(task)}
-          className="flex-1 px-3 py-1.5 text-sm text-blue-600 hover:bg-blue-50 rounded-md transition"
+          className="flex-1 px-3 py-1.5 text-sm text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900 rounded-md transition-colors duration-200"
         >
           Edit
         </button>
         <button
           onClick={() => onDelete(task)}
-          className="flex-1 px-3 py-1.5 text-sm text-red-600 hover:bg-red-50 rounded-md transition"
+          className="flex-1 px-3 py-1.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900 rounded-md transition-colors duration-200"
         >
           Delete
         </button>

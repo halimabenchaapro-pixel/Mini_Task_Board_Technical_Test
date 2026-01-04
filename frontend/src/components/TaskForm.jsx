@@ -63,7 +63,7 @@ const TaskForm = ({ task, onSubmit, onCancel }) => {
     <form onSubmit={handleSubmit} className="space-y-4">
       {/* Title */}
       <div>
-        <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
+        <label htmlFor="title" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
           Title <span className="text-red-500">*</span>
         </label>
         <input
@@ -72,8 +72,8 @@ const TaskForm = ({ task, onSubmit, onCancel }) => {
           name="title"
           value={formData.title}
           onChange={handleChange}
-          className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none ${
-            errors.title ? 'border-red-500' : 'border-gray-300'
+          className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none dark:bg-gray-700 dark:text-white transition-colors duration-200 ${
+            errors.title ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
           }`}
           placeholder="Enter task title"
         />
@@ -82,7 +82,7 @@ const TaskForm = ({ task, onSubmit, onCancel }) => {
 
       {/* Description */}
       <div>
-        <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+        <label htmlFor="description" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
           Description
         </label>
         <textarea
@@ -91,14 +91,14 @@ const TaskForm = ({ task, onSubmit, onCancel }) => {
           value={formData.description}
           onChange={handleChange}
           rows="3"
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-none"
+          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-none transition-colors duration-200"
           placeholder="Enter task description (optional)"
         />
       </div>
 
       {/* Status */}
       <div>
-        <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-1">
+        <label htmlFor="status" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
           Status
         </label>
         <select
@@ -106,7 +106,7 @@ const TaskForm = ({ task, onSubmit, onCancel }) => {
           name="status"
           value={formData.status}
           onChange={handleChange}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-colors duration-200"
         >
           <option value="BACKLOG">Backlog</option>
           <option value="IN_PROGRESS">In Progress</option>
@@ -116,7 +116,7 @@ const TaskForm = ({ task, onSubmit, onCancel }) => {
 
       {/* Priority */}
       <div>
-        <label htmlFor="priority" className="block text-sm font-medium text-gray-700 mb-1">
+        <label htmlFor="priority" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
           Priority
         </label>
         <select
@@ -124,7 +124,7 @@ const TaskForm = ({ task, onSubmit, onCancel }) => {
           name="priority"
           value={formData.priority}
           onChange={handleChange}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-colors duration-200"
         >
           <option value="LOW">Low</option>
           <option value="MEDIUM">Medium</option>
@@ -134,7 +134,7 @@ const TaskForm = ({ task, onSubmit, onCancel }) => {
 
       {/* Due Date */}
       <div>
-        <label htmlFor="due_date" className="block text-sm font-medium text-gray-700 mb-1">
+        <label htmlFor="due_date" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
           Due Date
         </label>
         <input
@@ -143,7 +143,7 @@ const TaskForm = ({ task, onSubmit, onCancel }) => {
           name="due_date"
           value={formData.due_date}
           onChange={handleChange}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-colors duration-200"
         />
       </div>
 
