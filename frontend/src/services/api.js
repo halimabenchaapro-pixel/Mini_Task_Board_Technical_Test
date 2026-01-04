@@ -21,11 +21,16 @@ api.interceptors.request.use((config) => {
 
 // Task API methods
 export const taskAPI = {
-  getAll: () => api.get('/tasks/'),
+  getAll: (params = {}) => api.get('/tasks/', { params: { page_size: 1000, ...params } }),
   getOne: (id) => api.get(`/tasks/${id}/`),
   create: (data) => api.post('/tasks/', data),
   update: (id, data) => api.patch(`/tasks/${id}/`, data),
   delete: (id) => api.delete(`/tasks/${id}/`),
+  statistics: () => api.get('/tasks/statistics/'),
+  bulkUpdateStatus: (taskIds, status) => api.post('/tasks/bulk_update_status/', {
+    task_ids: taskIds,
+    status,
+  }),
 };
 
 // Auth helper

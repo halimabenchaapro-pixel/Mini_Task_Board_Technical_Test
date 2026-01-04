@@ -61,7 +61,9 @@ const Board = () => {
       setLoading(true);
       setError(null);
       const response = await taskAPI.getAll();
-      setTasks(response.data);
+      // Handle paginated response
+      const tasksData = response.data.results || response.data;
+      setTasks(tasksData);
     } catch (err) {
       if (err.response?.status === 401 || err.response?.status === 403) {
         setError('Invalid API key. Please login again.');
@@ -94,34 +96,40 @@ const Board = () => {
 
   const handleCreateTask = async (formData) => {
     try {
-      await taskAPI.create(formData);
+      const response = await taskAPI.create(formData);
       setIsTaskModalOpen(false);
       fetchTasks();
-      showToast('Task created successfully!', 'success');
+      const message = response.data.message || 'Task created successfully!';
+      showToast(message, 'success');
     } catch (err) {
-      showToast('Failed to create task. Please try again.', 'error');
+      const errorMsg = err.response?.data?.error || 'Failed to create task. Please try again.';
+      showToast(errorMsg, 'error');
     }
   };
 
   const handleQuickAddTask = async (formData) => {
     try {
-      await taskAPI.create(formData);
+      const response = await taskAPI.create(formData);
       fetchTasks();
-      showToast('Task added successfully!', 'success');
+      const message = response.data.message || 'Task added successfully!';
+      showToast(message, 'success');
     } catch (err) {
-      showToast('Failed to add task. Please try again.', 'error');
+      const errorMsg = err.response?.data?.error || 'Failed to add task. Please try again.';
+      showToast(errorMsg, 'error');
     }
   };
 
   const handleUpdateTask = async (formData) => {
     try {
-      await taskAPI.update(editingTask.id, formData);
+      const response = await taskAPI.update(editingTask.id, formData);
       setIsTaskModalOpen(false);
       setEditingTask(null);
       fetchTasks();
-      showToast('Task updated successfully!', 'success');
+      const message = response.data.message || 'Task updated successfully!';
+      showToast(message, 'success');
     } catch (err) {
-      showToast('Failed to update task. Please try again.', 'error');
+      const errorMsg = err.response?.data?.error || 'Failed to update task. Please try again.';
+      showToast(errorMsg, 'error');
     }
   };
 
