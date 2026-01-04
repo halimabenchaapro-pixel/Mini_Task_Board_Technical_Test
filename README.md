@@ -22,17 +22,24 @@ A full-stack task management application built with Django REST Framework and Re
 - Created At (auto-generated)
 
 ### UX Features
-- Loading states with spinners
-- Empty states for each column
-- Form validation messages
-- Responsive layout (mobile friendly)
-- Visual polish: spacing, typography hierarchy, buttons, hover states
+- **Loading states** with spinners
+- **Empty states** for each column with helpful messages
+- **Form validation** messages
+- **Responsive layout** (mobile friendly)
+- **Visual polish**: spacing, typography hierarchy, buttons, hover states
+- **Toast Notifications**: Success/error feedback for all actions
+- **Quick Add Task**: Inline task creation in each column for faster workflow
+- **Quick Status Change**: One-click buttons to move tasks (Start, Complete, Restart)
+- **Keyboard Shortcuts**: Ctrl/Cmd+K to quickly create tasks
+- **Enhanced Animations**: Slide-in, scale-in, and shake effects
+- **Better Empty States**: Contextual hints and quick action prompts
 
 ### Bonus Features Implemented
 - **Dark Mode**: Toggle between light and dark themes with persistent preference
-- **Keyboard Accessibility**: ESC key to close modals, focus management
-- **Optimistic UI Updates**: Immediate UI feedback for drag-and-drop operations
+- **Keyboard Accessibility**: ESC key to close modals, Ctrl/Cmd+K for quick add, focus management
+- **Optimistic UI Updates**: Immediate UI feedback for drag-and-drop and status changes
 - **Animations**: Subtle transitions and animations throughout the app
+- **Toast Notifications**: Real-time feedback for all user actions
 
 ## Tech Stack
 
