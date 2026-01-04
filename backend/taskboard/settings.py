@@ -137,6 +137,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # CORS settings
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",  # Vite default port
+    "http://localhost:5174",  # Vite alternative port
     "http://localhost:3000",  # Alternative React port
 ]
 
@@ -158,5 +159,6 @@ REST_FRAMEWORK = {
 # CSRF settings
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
+    "http://localhost:5174",
     "http://localhost:3000",
 ]
