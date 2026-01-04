@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { taskAPI } from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
@@ -8,6 +8,8 @@ import DeleteConfirmation from '../components/DeleteConfirmation';
 import Modal from '../components/Modal';
 import Button from '../components/Button';
 import ThemeToggle from '../components/ThemeToggle';
+import Toast from '../components/Toast';
+import QuickAddTask from '../components/QuickAddTask';
 
 const Board = () => {
   const [tasks, setTasks] = useState([]);
@@ -19,7 +21,12 @@ const Board = () => {
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
   const [editingTask, setEditingTask] = useState(null);
   const [deletingTask, setDeletingTask] = useState(null);
+  const [toast, setToast] = useState(null);
   const { logout } = useAuth();
+
+  const showToast = useCallback((message, type = 'success') => {
+    setToast({ message, type });
+  }, []);
 
   const columns = {
     BACKLOG: { title: 'Backlog', color: 'bg-gray-100 dark:bg-gray-700' },
@@ -34,6 +41,20 @@ const Board = () => {
   useEffect(() => {
     filterTasks();
   }, [tasks, searchQuery, priorityFilter]);
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      // Ctrl/Cmd + K to create new task
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        openCreateModal();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, []);
 
   const fetchTasks = async () => {
     try {
@@ -76,8 +97,19 @@ const Board = () => {
       await taskAPI.create(formData);
       setIsTaskModalOpen(false);
       fetchTasks();
+      showToast('Task created successfully!', 'success');
     } catch (err) {
-      alert('Failed to create task. Please check your input and try again.');
+      showToast('Failed to create task. Please try again.', 'error');
+    }
+  };
+
+  const handleQuickAddTask = async (formData) => {
+    try {
+      await taskAPI.create(formData);
+      fetchTasks();
+      showToast('Task added successfully!', 'success');
+    } catch (err) {
+      showToast('Failed to add task. Please try again.', 'error');
     }
   };
 
@@ -87,8 +119,9 @@ const Board = () => {
       setIsTaskModalOpen(false);
       setEditingTask(null);
       fetchTasks();
+      showToast('Task updated successfully!', 'success');
     } catch (err) {
-      alert('Failed to update task. Please check your input and try again.');
+      showToast('Failed to update task. Please try again.', 'error');
     }
   };
 
@@ -97,8 +130,33 @@ const Board = () => {
       await taskAPI.delete(deletingTask.id);
       setDeletingTask(null);
       fetchTasks();
+      showToast('Task deleted successfully!', 'success');
     } catch (err) {
-      alert('Failed to delete task. Please try again.');
+      showToast('Failed to delete task. Please try again.', 'error');
+    }
+  };
+
+  const handleQuickStatusChange = async (task, newStatus) => {
+    const previousStatus = task.status;
+
+    // Optimistic update
+    setTasks((prevTasks) =>
+      prevTasks.map((t) =>
+        t.id === task.id ? { ...t, status: newStatus } : t
+      )
+    );
+
+    try {
+      await taskAPI.update(task.id, { status: newStatus });
+      showToast(`Task moved to ${newStatus.replace('_', ' ')}!`, 'success');
+    } catch (err) {
+      // Revert on error
+      setTasks((prevTasks) =>
+        prevTasks.map((t) =>
+          t.id === task.id ? { ...t, status: previousStatus } : t
+        )
+      );
+      showToast('Failed to update task status. Please try again.', 'error');
     }
   };
 
@@ -124,10 +182,11 @@ const Board = () => {
 
     try {
       await taskAPI.update(taskId, { status: newStatus });
+      showToast('Task moved successfully!', 'success');
     } catch (err) {
       // Revert on error
       fetchTasks();
-      alert('Failed to update task status. Please try again.');
+      showToast('Failed to move task. Please try again.', 'error');
     }
   };
 
@@ -167,7 +226,12 @@ const Board = () => {
       <header className="bg-white dark:bg-gray-800 shadow-sm transition-colors duration-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Task Board</h1>
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Task Board</h1>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                Press <kbd className="px-2 py-0.5 bg-gray-200 dark:bg-gray-700 rounded text-xs">Ctrl+K</kbd> to quick add task
+              </p>
+            </div>
             <div className="flex gap-2">
               <ThemeToggle />
               <Button onClick={openCreateModal} variant="primary">
@@ -235,10 +299,17 @@ const Board = () => {
                         snapshot.isDraggingOver ? 'bg-blue-50 dark:bg-blue-900' : ''
                       }`}
                     >
+                      {/* Quick Add Task */}
+                      <QuickAddTask
+                        status={status}
+                        onAdd={handleQuickAddTask}
+                      />
+
+                      {/* Task List */}
                       {getTasksByStatus(status).length === 0 ? (
-                        <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                        <div className="text-center py-8 text-gray-500 dark:text-gray-400 mt-3">
                           <svg
-                            className="mx-auto h-12 w-12 text-gray-400"
+                            className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-600"
                             fill="none"
                             viewBox="0 0 24 24"
                             stroke="currentColor"
@@ -250,26 +321,30 @@ const Board = () => {
                               d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                             />
                           </svg>
-                          <p className="mt-2">No tasks here yet...</p>
+                          <p className="mt-2 text-sm">No tasks here yet...</p>
+                          <p className="text-xs mt-1 text-gray-400">Use the quick add button above</p>
                         </div>
                       ) : (
-                        getTasksByStatus(status).map((task, index) => (
-                          <Draggable
-                            key={task.id}
-                            draggableId={task.id.toString()}
-                            index={index}
-                          >
-                            {(provided, snapshot) => (
-                              <TaskCard
-                                task={task}
-                                onEdit={openEditModal}
-                                onDelete={setDeletingTask}
-                                provided={provided}
-                                snapshot={snapshot}
-                              />
-                            )}
-                          </Draggable>
-                        ))
+                        <div className="mt-3 space-y-3">
+                          {getTasksByStatus(status).map((task, index) => (
+                            <Draggable
+                              key={task.id}
+                              draggableId={task.id.toString()}
+                              index={index}
+                            >
+                              {(provided, snapshot) => (
+                                <TaskCard
+                                  task={task}
+                                  onEdit={openEditModal}
+                                  onDelete={setDeletingTask}
+                                  onStatusChange={handleQuickStatusChange}
+                                  provided={provided}
+                                  snapshot={snapshot}
+                                />
+                              )}
+                            </Draggable>
+                          ))}
+                        </div>
                       )}
                       {provided.placeholder}
                     </div>
@@ -301,6 +376,15 @@ const Board = () => {
         onConfirm={handleDeleteTask}
         taskTitle={deletingTask?.title || ''}
       />
+
+      {/* Toast Notifications */}
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
     </div>
   );
 };

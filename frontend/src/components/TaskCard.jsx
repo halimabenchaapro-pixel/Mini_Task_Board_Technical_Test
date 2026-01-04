@@ -1,8 +1,14 @@
-const TaskCard = ({ task, onEdit, onDelete, provided, snapshot }) => {
+const TaskCard = ({ task, onEdit, onDelete, onStatusChange, provided, snapshot }) => {
   const priorityColors = {
     LOW: 'bg-green-100 text-green-800 border-green-200',
     MEDIUM: 'bg-yellow-100 text-yellow-800 border-yellow-200',
     HIGH: 'bg-red-100 text-red-800 border-red-200',
+  };
+
+  const statusActions = {
+    BACKLOG: { next: 'IN_PROGRESS', label: 'Start', icon: '→' },
+    IN_PROGRESS: { next: 'DONE', label: 'Complete', icon: '✓' },
+    DONE: { next: 'BACKLOG', label: 'Restart', icon: '↺' },
   };
 
   const formatDate = (dateString) => {
@@ -54,17 +60,31 @@ const TaskCard = ({ task, onEdit, onDelete, provided, snapshot }) => {
         </div>
       )}
 
+      {/* Quick Status Change Button */}
+      {onStatusChange && statusActions[task.status] && (
+        <button
+          onClick={() => onStatusChange(task, statusActions[task.status].next)}
+          className="w-full mb-2 px-3 py-2 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/50 rounded-md transition-all duration-200 text-sm font-medium flex items-center justify-center gap-2 group"
+          title={`Move to ${statusActions[task.status].next.replace('_', ' ')}`}
+        >
+          <span>{statusActions[task.status].icon}</span>
+          <span>{statusActions[task.status].label}</span>
+        </button>
+      )}
+
       {/* Actions */}
       <div className="flex gap-2 pt-2 border-t border-gray-100 dark:border-gray-600">
         <button
           onClick={() => onEdit(task)}
-          className="flex-1 px-3 py-1.5 text-sm text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900 rounded-md transition-colors duration-200"
+          className="flex-1 px-3 py-1.5 text-sm text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900 rounded-md transition-colors duration-200 font-medium"
+          title="Edit task (E)"
         >
           Edit
         </button>
         <button
           onClick={() => onDelete(task)}
-          className="flex-1 px-3 py-1.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900 rounded-md transition-colors duration-200"
+          className="flex-1 px-3 py-1.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900 rounded-md transition-colors duration-200 font-medium"
+          title="Delete task (Delete)"
         >
           Delete
         </button>
