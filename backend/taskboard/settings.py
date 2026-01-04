@@ -138,10 +138,25 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",  # Vite default port
     "http://localhost:5174",  # Vite alternative port
+    "http://localhost:5175",  # Vite alternative port
     "http://localhost:3000",  # Alternative React port
 ]
 
 CORS_ALLOW_CREDENTIALS = True
+
+# Allow X-API-KEY header
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+    'x-api-key',  # Custom API key header
+]
 
 # API Key for simple authentication
 API_KEY = os.getenv('API_KEY', 'dev-api-key-12345')
@@ -160,5 +175,6 @@ REST_FRAMEWORK = {
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
     "http://localhost:5174",
+    "http://localhost:5175",
     "http://localhost:3000",
 ]
