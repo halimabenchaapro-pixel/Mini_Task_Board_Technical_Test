@@ -32,7 +32,7 @@ class TaskAPITestCase(TestCase):
         }
         response = self.client.post('/api/tasks/', data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data['title'], "New Task")
+        self.assertEqual(response.data['data']['title'], "New Task")
 
         # Test with empty title (should fail)
         data_no_title = {
@@ -61,7 +61,7 @@ class TaskAPITestCase(TestCase):
             format='json'
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['status'], "IN_PROGRESS")
+        self.assertEqual(response.data['data']['status'], "IN_PROGRESS")
 
         # Verify the task was updated in the database
         self.task.refresh_from_db()
@@ -85,7 +85,7 @@ class TaskAPITestCase(TestCase):
 
         # Delete the task
         response = self.client.delete(f'/api/tasks/{self.task.id}/')
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         # Verify task was deleted
         self.assertEqual(Task.objects.count(), initial_count - 1)
